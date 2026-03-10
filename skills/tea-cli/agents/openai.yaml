@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tea CLI"
+  short_description: "Gitea issue and PR workflows"
+  default_prompt: "Use $tea-cli to manage issues, pull requests, and API fallbacks in this Gitea repo."
