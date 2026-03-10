@@ -39,6 +39,26 @@ Typical triggers:
 - Use `--remote` when login selection should come from a specific git remote.
 - Prefer high-level `tea` subcommands first. Use `tea api` only for gaps or unsupported flows.
 
+## Repo Detection From Current Folder
+
+When opened inside a git checkout that points at Gitea, prefer repo inference first, but verify before mutating anything.
+
+Recommended sequence:
+
+1. Check the active Gitea identity:
+   - `tea whoami`
+2. Inspect git remotes:
+   - `git remote -v`
+3. Let `tea` infer repo context from the current folder for read operations first.
+4. If the repository has multiple remotes or the target remote is not obvious, rerun commands with `--remote <remote-name>`.
+5. If repo or login selection is still ambiguous, pin both explicitly:
+   - `--repo owner/repo --login <login-name>`
+
+Default rule:
+
+- read-only commands can use inferred context first
+- write operations should switch to explicit `--remote`, `--repo`, or `--login` as soon as inference looks uncertain
+
 ## Core Workflows
 
 ### Issues
@@ -111,5 +131,6 @@ Read [references/api-fallbacks.md](references/api-fallbacks.md) when you need co
 
 - If `tea` acts on the wrong repo, rerun with `--repo owner/repo`.
 - If `tea` picks the wrong account, rerun with `--login <login-name>`.
+- If the wrong git remote is being used for context discovery, rerun with `--remote <remote-name>`.
 - If a PR command fails because the branch is unknown remotely, push the branch first and retry.
 - If a high-level command cannot express the needed update, switch to `tea api`.
