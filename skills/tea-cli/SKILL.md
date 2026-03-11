@@ -1,6 +1,6 @@
 ---
 name: tea-cli
-description: Use this skill when working with Gitea through the `tea` CLI, especially for repository-scoped issue, pull request, login, comment, merge, and API fallback workflows from a terminal.
+description: Use this skill when working with Gitea through the `tea` CLI, especially for repository-scoped issue, pull request, login, comment, and merge workflows from a terminal.
 ---
 
 # Tea CLI
@@ -15,7 +15,6 @@ Typical triggers:
 - create, inspect, review, approve, reject, or merge pull requests
 - comment on issues or pull requests
 - work against a repo other than the current directory with `--repo`
-- fall back to `tea api` when a higher-level `tea` subcommand does not expose the field or action you need
 
 ## Quick Start
 
@@ -37,7 +36,6 @@ Typical triggers:
 - Use `--repo` when operating outside a checkout or when the current checkout is not the target repo.
 - Use `--login` when more than one Gitea account is configured.
 - Use `--remote` when login selection should come from a specific git remote.
-- Prefer high-level `tea` subcommands first. Use `tea api` only for gaps or unsupported flows.
 
 ## Repo Detection From Current Folder
 
@@ -99,24 +97,6 @@ Default rule:
 - Keep comments explicit and non-interactive when automating.
 - If the exact flags are needed for the installed version, inspect `tea comment --help` before sending the command.
 
-## API Fallback Pattern
-
-Use `tea api` when:
-
-- a high-level subcommand is missing a required field
-- you need a raw endpoint that `tea` does not wrap cleanly
-- you want exact API payload control
-
-Rules:
-
-1. Prefer endpoint paths with `{owner}` and `{repo}` placeholders so repo context is reused.
-2. Use `-f` for string fields.
-3. Use `-F` for typed values such as booleans, numbers, `null`, or file/stdin payloads.
-4. Use `-X` to set the method explicitly for writes.
-5. Keep responses machine-readable when the output will be consumed downstream.
-
-Read [references/api-fallbacks.md](references/api-fallbacks.md) when you need common endpoint patterns.
-
 ## Hard Rules
 
 1. Prefer non-interactive invocations in agent workflows.
@@ -124,8 +104,7 @@ Read [references/api-fallbacks.md](references/api-fallbacks.md) when you need co
 3. Do not create a PR from an unpushed local branch.
 4. Check command output after each mutating action before continuing.
 5. Prefer `--output json` when follow-up logic depends on IDs, URLs, or mergeability.
-6. Use `tea api` as a fallback, not as the default path for standard issue and PR workflows.
-7. Keep branch and base selection explicit for PR creation when there is any ambiguity.
+6. Keep branch and base selection explicit for PR creation when there is any ambiguity.
 
 ## Recovery
 
@@ -133,4 +112,3 @@ Read [references/api-fallbacks.md](references/api-fallbacks.md) when you need co
 - If `tea` picks the wrong account, rerun with `--login <login-name>`.
 - If the wrong git remote is being used for context discovery, rerun with `--remote <remote-name>`.
 - If a PR command fails because the branch is unknown remotely, push the branch first and retry.
-- If a high-level command cannot express the needed update, switch to `tea api`.
